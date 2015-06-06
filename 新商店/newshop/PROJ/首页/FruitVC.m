@@ -45,7 +45,7 @@
     [self buildTopView];
     [self buildFootView];
 
-    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 15 + 100 + 15 + 40, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - 15 - 100 - 15 - 40 - 60 - 64) style:UITableViewStylePlain];
+    _tableView = [[UITableView alloc] initWithFrame:CGRectMake(0, 15 + 100 + 15 + 40, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT - 170 - 60 - 64) style:UITableViewStylePlain];
     UIView *view = [UIView new];
     _tableView.tableFooterView = view;
     _tableView.delegate = self;
@@ -75,13 +75,13 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
-    
     [super viewDidAppear:YES];
     [self loadData];
 }
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    self.automaticallyAdjustsScrollViewInsets = YES;
     [super viewWillAppear:YES];
     [[tools shared] HUDShowText:@"请稍后..."];
     _shopInfo = [[Info alloc] init];
@@ -198,14 +198,14 @@
             if (isNull) {
                 _currentPage -= 1;
             }
-            
             if ([_tableView.header isRefreshing]) {
                 [_tableView.header endRefreshing];
             }else {
                 [_tableView.footer endRefreshing];
             }
-            
+
             [_tableView reloadData];
+
         } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
             [[tools shared] HUDHide];
             if ([_tableView.header isRefreshing]) {
@@ -280,6 +280,7 @@
 
 - (UITableViewCell *)tableView:(UITableView *)tableView cellForRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    
     if (tableView.tag != 10) {
         
         UITableViewCell *cell = [tableView dequeueReusableCellWithIdentifier:@"cell"];
@@ -382,7 +383,7 @@
     __block CGFloat price = 0;
     [_selectDic enumerateKeysAndObjectsUsingBlock:^(id key, id obj, BOOL *stop) {
         Info *model = (Info *)obj;
-        price += [model.discountPrice doubleValue];
+        price += ([model.discountPrice doubleValue] * model.foodNum);
         sum += model.foodNum;
     }];
 
@@ -417,7 +418,6 @@
 
 - (void)buildTopView
 {
-    
     UIView *view = [[UIView alloc] initWithFrame:CGRectMake(0, 15, UI_SCREEN_WIDTH, 100)];
     view.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:view];
@@ -462,6 +462,7 @@
     view2.backgroundColor = [UIColor whiteColor];
     [self.view addSubview:view2];
     NSArray *array = @[@"最低价格",@"最高销量",@"全部分类"];
+    CGFloat width = [array[0] boundingRectWithSize:CGSizeMake(200, 20) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:17]} context:nil].size.width + 5;
     for (NSInteger i = 0; i < 3; i ++) {
 //        UIView *optionView = [[UIView alloc] initWithFrame:CGRectMake((UI_SCREEN_WIDTH / 3.0) * i, 0, UI_SCREEN_WIDTH / 3.0, 40)];
 //        [view2 addSubview:optionView];
@@ -472,7 +473,10 @@
         [btn setTitleColor:[UIColor blackColor] forState:UIControlStateNormal];
         [btn setImage:img forState:UIControlStateNormal];
         [btn setTitleEdgeInsets:UIEdgeInsetsMake(0, -img.size.width, 0, img.size.width)];
-        [btn setImageEdgeInsets:UIEdgeInsetsMake(0, btn.titleLabel.bounds.size.width, 0, -btn.titleLabel.bounds.size.width)];
+        NSLog(@"%f",btn.titleLabel.bounds.size.width);
+//        [btn setImageEdgeInsets:UIEdgeInsetsMake(0, btn.titleLabel.bounds.size.width, 0, -btn.titleLabel.bounds.size.width)];
+        [btn setImageEdgeInsets:UIEdgeInsetsMake(0, width, 0, -width)];
+
         btn.tag = i;
         [btn addTarget:self action:@selector(optionBtnClick:) forControlEvents:UIControlEventTouchUpInside];
         [view2 addSubview:btn];

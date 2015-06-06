@@ -401,7 +401,7 @@
     
 //    [[UITabBar appearance] setBackgroundImage:[UIImage imageNamed:@"tab_bg.png"]];
     
-    [[UITabBar appearance] setTintColor:[UIColor redColor]]; 
+    [[UITabBar appearance] setTintColor:[UIColor redColor]];
     [[UITabBar appearance] setBackgroundColor:[UIColor whiteColor]];
     
 //    [[UITabBar appearance] setBarTintColor:[UIColor whiteColor]];
@@ -428,7 +428,6 @@
     [nav2.tabBarItem setTitle:@"附近"];
     [nav2.tabBarItem setImage:[UIImage imageNamed:@"tab_2.png"]];
     [nav2.tabBarItem setSelectedImage:[UIImage imageNamed:@"tab_2_s.png"]];
-
     
     [nav3.tabBarItem setTitle:@"团购"];
     [nav3.tabBarItem setImage:[UIImage imageNamed:@"tab_3.png"]];
@@ -438,7 +437,6 @@
     [nav4.tabBarItem setTitle:@"我的"];
     [nav4.tabBarItem setImage:[UIImage imageNamed:@"tab_4.png"]];
     [nav4.tabBarItem setSelectedImage:[UIImage imageNamed:@"tab_4_s.png"]];
-
 
     if (iOS7) {
         
@@ -505,7 +503,6 @@
 
 - (BOOL)application:(UIApplication *)application handleOpenURL:(NSURL *)url
 {
-    
     BOOL result = [UMSocialSnsService handleOpenURL:url];
     if (result == FALSE) {
         //调用其他SDK，例如新浪微博SDK等

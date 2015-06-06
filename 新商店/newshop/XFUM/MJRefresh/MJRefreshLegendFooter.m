@@ -30,9 +30,7 @@
 #pragma mark - 初始化方法
 - (void)layoutSubviews
 {
-    
     [super layoutSubviews];
-    
     // 指示器
     if (self.stateHidden) {
         self.activityView.center = CGPointMake(self.mj_w * 0.5, self.mj_h * 0.5);

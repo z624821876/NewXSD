@@ -9,7 +9,9 @@
 #import "NearbyVC.h"
 #import "ShopVC.h"
 #import "PayVC.h"
-
+#import "FoodShopVC.h"
+#import "ShopVC.h"
+#import "FruitVC.h"
 @interface NearbyVC ()
 {
     UIView              *_headView;
@@ -120,6 +122,7 @@
                 shop.id = nilOrJSONObjectForKey(dict, @"id");
                 shop.name = nilOrJSONObjectForKey(dict, @"name");
                 shop.image = nilOrJSONObjectForKey(dict, @"image");
+                shop.catId = nilOrJSONObjectForKey(dict, @"catId");
                 shop.logo = nilOrJSONObjectForKey(dict, @"logo");
                 shop.address = nilOrJSONObjectForKey(dict, @"address");
                 shop.mobile = nilOrJSONObjectForKey(dict, @"mobile");
@@ -237,19 +240,50 @@
 
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
+    [tableView deselectRowAtIndexPath:indexPath animated:YES];
+    
     Info *shop = [_dataArray objectAtIndex:indexPath.row];
-    ShopVC *vc = [[ShopVC alloc] init];
-    vc.shopId = shop.id;
-    vc.name = shop.name;
-    vc.image = shop.image;
-    vc.logo = shop.logo;
-    vc.address = shop.address;
-    vc.mobile = shop.mobile;
-    vc.latitude = shop.latitude;
-    vc.longitude = shop.longitude;
-    vc.hidesBottomBarWhenPushed = YES;
-    vc.navTitle = shop.name;
-    [self.navigationController pushViewController:vc animated:YES];
+    switch ([shop.catId integerValue]) {
+        case 5:
+        {
+            FoodShopVC *vc = [[FoodShopVC alloc] init];
+            vc.shopId = shop.id;
+            //                vc.name = info;
+            vc.image = shop.image;
+            vc.hidesBottomBarWhenPushed = YES;
+            //                vc.navTitle = user.shopName;
+            vc.cateId = shop.catId;
+            [self.navigationController pushViewController:vc animated:YES];
+            
+        }
+            break;
+        case 11:
+        case 12:
+        {
+            FruitVC *vc = [[FruitVC alloc] init];
+            vc.shopId = shop.id;
+            //                vc.name = info;
+            vc.hidesBottomBarWhenPushed = YES;
+            //                vc.navTitle = user.shopName;
+            vc.cateId = shop.catId;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+        default:
+        {
+            ShopVC *vc = [[ShopVC alloc] init];
+            vc.shopId = shop.id;
+            //                vc.name = info;
+            vc.image = shop.image;
+            vc.hidesBottomBarWhenPushed = YES;
+            //                vc.navTitle = user.shopName;
+            vc.cateId = shop.catId;
+            
+            [self.navigationController pushViewController:vc animated:YES];
+            
+        }
+            break;
+    }
 }
 
 

@@ -21,6 +21,7 @@
 #import "ShopVC.h"
 #import "FoodShopVC.h"
 #import "SearchResultVC.h"
+#import "FruitVC.h"
 @interface HomeVC ()
 {
     UISearchBar *_searchBar;
@@ -207,27 +208,51 @@
     if (info.clickurl != nil && info.objId != nil) {
         if (![info.clickurl isEqualToString:@"#"]) {
             
-            if (![info.objId isEqualToString:@"5"]) {
-                ShopVC *vc = [[ShopVC alloc] init];
-                vc.shopId = info.clickurl;
-//                vc.name = info;
-                vc.image = info.filePath;
-                vc.hidesBottomBarWhenPushed = YES;
-//                vc.navTitle = user.shopName;
-                vc.cateId = info.objId;
-                
-                [self.navigationController pushViewController:vc animated:YES];
-            }else{
-                FoodShopVC *vc = [[FoodShopVC alloc] init];
-                vc.shopId = info.clickurl;
-                //                vc.name = info;
-                vc.image = info.filePath;
-                vc.hidesBottomBarWhenPushed = YES;
-                //                vc.navTitle = user.shopName;
-                vc.cateId = info.objId;
-                [self.navigationController pushViewController:vc animated:YES];
+            switch ([info.objId integerValue]) {
+                case 5:
+                {
+                    FoodShopVC *vc = [[FoodShopVC alloc] init];
+                    vc.shopId = info.clickurl;
+                    //                vc.name = info;
+                    vc.image = info.filePath;
+                    vc.hidesBottomBarWhenPushed = YES;
+                    //                vc.navTitle = user.shopName;
+                    vc.cateId = info.objId;
+                    [self.navigationController pushViewController:vc animated:YES];
+                    
+                }
+                    break;
+                case 11:
+                case 12:
+                {
+                    FruitVC *vc = [[FruitVC alloc] init];
+                    vc.shopId = info.clickurl;
+                    //                    vc.name = info.name;
+                    vc.hidesBottomBarWhenPushed = YES;
+                    vc.cateId = info.objId;
+                    [self.navigationController pushViewController:vc animated:YES];
+                }
+                    break;
+                default:
+                {
+                    ShopVC *vc = [[ShopVC alloc] init];
+                    vc.shopId = info.clickurl;
+                    //                vc.name = info;
+                    vc.image = info.filePath;
+                    vc.hidesBottomBarWhenPushed = YES;
+                    //                vc.navTitle = user.shopName;
+                    vc.cateId = info.objId;
+                    
+                    [self.navigationController pushViewController:vc animated:YES];
+                    
+                }
+                    break;
             }
-
+            
+            //            if (![info.objId isEqualToString:@"5"]) {
+            //            }else{
+            //            }
+            
             
         }
         
@@ -309,7 +334,9 @@
     //load广告数据并重画UI
     [self loadAd];
     //按流程顺序load市场->商场数据，并重画市场->商场UI【先removeFromSuperview，再重画】
-    [self loadMarketWithType:@"0" Top:_banner1View.bottom]; }
+    [self loadMarketWithType:@"0" Top:_banner1View.bottom];
+}
+
 
 #pragma mark-- Build View
 -(void)buildHeadView
@@ -418,26 +445,49 @@
             if (advertisementCatId != nil && advertisementShopId != nil) {
                 if (![advertisementShopId isEqualToString:@"#"]) {
                     
-                    if (![advertisementCatId isEqualToString:@"5"]) {
-                        ShopVC *vc = [[ShopVC alloc] init];
-                        vc.shopId = advertisementShopId;
-//                        vc.image = info.filePath;
-                        vc.hidesBottomBarWhenPushed = YES;
-                        vc.cateId = advertisementCatId;
-                        
-                        [self.navigationController pushViewController:vc animated:YES];
-                    }else{
-                        FoodShopVC *vc = [[FoodShopVC alloc] init];
-                        vc.shopId = advertisementShopId;
-//                        vc.image = info.filePath;
-                        vc.hidesBottomBarWhenPushed = YES;
-                        vc.cateId = advertisementCatId;
-                        [self.navigationController pushViewController:vc animated:YES];
-                    }
                     
-                    
-                }
-                
+                            switch ([advertisementCatId integerValue]) {
+                                case 5:
+                                {
+                                    FoodShopVC *vc = [[FoodShopVC alloc] init];
+                                    vc.shopId = advertisementShopId;
+                                    //                        vc.image = info.filePath;
+                                    vc.hidesBottomBarWhenPushed = YES;
+                                    vc.cateId = advertisementCatId;
+                                    [self.navigationController pushViewController:vc animated:YES];
+                                    
+                                }
+                                    break;
+                                case 11:
+                                case 12:
+                                {
+                                    FruitVC *vc = [[FruitVC alloc] init];
+                                    vc.shopId = advertisementShopId;
+                                    //                        vc.image = info.filePath;
+                                    vc.hidesBottomBarWhenPushed = YES;
+                                    vc.cateId = advertisementCatId;
+                                    [self.navigationController pushViewController:vc animated:YES];
+                                }
+                                    break;
+                                default:
+                                {
+                                    ShopVC *vc = [[ShopVC alloc] init];
+                                    vc.shopId = advertisementShopId;
+                                    //                        vc.image = info.filePath;
+                                    vc.hidesBottomBarWhenPushed = YES;
+                                    vc.cateId = advertisementCatId;
+                                    
+                                    [self.navigationController pushViewController:vc animated:YES];
+                                    
+                                }
+                                    break;
+                            }
+                            
+                            //            if (![info.objId isEqualToString:@"5"]) {
+                            //            }else{
+                            //            }
+                            
+        
             }
 
         }
@@ -447,25 +497,48 @@
             //进入绑定商家
             User *user = [LLSession sharedSession].user;
             if (user.shopID.length > 0) {
-                if (![user.shopCat isEqualToString:@"5"]) {
-                    ShopVC *vc = [[ShopVC alloc] init];
-                    vc.shopId = user.shopID;
-                    vc.name = user.shopName;
-                    vc.image = user.shopURL;
-                    vc.hidesBottomBarWhenPushed = YES;
-                    vc.navTitle = user.shopName;
-                    vc.cateId = user.shopCat;
-                    [self.navigationController pushViewController:vc animated:YES];
-                }else{
-                    FoodShopVC *vc = [[FoodShopVC alloc] init];
-                    vc.shopId = user.shopID;
-                    vc.name = user.shopName;
-                    vc.image = user.shopURL;
-                    vc.hidesBottomBarWhenPushed = YES;
-                    vc.navTitle = user.shopName;
-                    vc.cateId = user.shopCat;
-                    vc.navTitle = user.shopName;
-                    [self.navigationController pushViewController:vc animated:YES];
+                
+                
+                switch ([user.shopCat integerValue]) {
+                    case 5:
+                    {
+                        FoodShopVC *vc = [[FoodShopVC alloc] init];
+                        vc.shopId = user.shopID;
+                        vc.name = user.shopName;
+                        vc.image = user.shopURL;
+                        vc.hidesBottomBarWhenPushed = YES;
+                        vc.navTitle = user.shopName;
+                        vc.cateId = user.shopCat;
+                        vc.navTitle = user.shopName;
+                        [self.navigationController pushViewController:vc animated:YES];
+                        
+                    }
+                        break;
+                    case 11:
+                    case 12:
+                    {
+                        FruitVC *vc = [[FruitVC alloc] init];
+                        vc.shopId = user.shopID;
+                        //                        vc.image = info.filePath;
+                        vc.hidesBottomBarWhenPushed = YES;
+                        vc.cateId = user.shopCat;
+                        [self.navigationController pushViewController:vc animated:YES];
+                    }
+                        break;
+                    default:
+                    {
+                        ShopVC *vc = [[ShopVC alloc] init];
+                        vc.shopId = user.shopID;
+                        vc.name = user.shopName;
+                        vc.image = user.shopURL;
+                        vc.hidesBottomBarWhenPushed = YES;
+                        vc.navTitle = user.shopName;
+                        vc.cateId = user.shopCat;
+                        
+                        [self.navigationController pushViewController:vc animated:YES];
+                        
+                    }
+                        break;
                 }
             }
         }
@@ -477,7 +550,7 @@
             dis.navTitle = @"9.9专区";
             dis.hidesBottomBarWhenPushed = YES;
             [self.navigationController pushViewController:dis animated:YES];
-
+    
         }
             break;
             
@@ -486,7 +559,7 @@
     }
     
 }
-
+}
 -(void)buildMarketWithTop:(float)top
 {
     
