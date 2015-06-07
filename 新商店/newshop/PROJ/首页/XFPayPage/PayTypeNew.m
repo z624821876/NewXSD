@@ -118,8 +118,8 @@
             
             NSString *string = [nf stringFromNumber:[NSNumber numberWithDouble:[money doubleValue]]];
             
-
             [_prilabel2 setText:[NSString stringWithFormat:@"您的账户有新商币%@个,本次可以使用%@个",pri,string]];
+            
         }else{
             [[tools shared] HUDShowHideText:@"读取数据失败" delay:1];
         }
@@ -202,7 +202,7 @@
     [_useMoneyTF setEnabled:NO];
     self.useMoney = _useMoneyTF.text;
     _useMoneyTF.delegate = self;
-    _useMoneyTF.keyboardType = UIKeyboardTypeNumberPad;
+//    _useMoneyTF.keyboardType = UIKeyboardTypeNumberPad;
     [scrollView addSubview:_useMoneyTF];
     
     UILabel *label4 = [[UILabel alloc]initWithFrame:CGRectMake(_useMoneyTF.right, _prilabel2.bottom, UI_SCREEN_WIDTH - _useMoneyTF.right, CELL_HEIGHT)];

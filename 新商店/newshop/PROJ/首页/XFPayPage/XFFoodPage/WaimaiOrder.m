@@ -131,7 +131,7 @@
         
         nameLabel.text = carInfo.name;
         //info.totalPrice
-        priceLabel.text = [NSString stringWithFormat:@"￥%@.00",carInfo.totalPrice];
+        priceLabel.text = [NSString stringWithFormat:@"￥%.2f",[carInfo.totalPrice doubleValue]];
         
         [pictureView setImageWithURL:[NSURL URLWithString:carInfo.detailImage]];
         numberLabel.text = carInfo.num;
@@ -327,7 +327,7 @@
                         [[tools shared]HUDShowHideText:@"订单提交成功，马上去付款！" delay:1];
                         PayTypeNew *typeVC = [[PayTypeNew alloc]init];
                         typeVC.navTitle = @"支付方式";
-                        typeVC.totalPrice = [NSString stringWithFormat:@"%.0f",[self.totalPrice doubleValue] + [self.price doubleValue]];
+                        typeVC.totalPrice = [NSString stringWithFormat:@"%f",[self.totalPrice doubleValue] + [self.price doubleValue]];
                         typeVC.orderId=[result objectForKey:@"id"];
                         typeVC.subject=@"需要接口确认商品标题";
                         typeVC.body=@"需要接口确认商品描述";

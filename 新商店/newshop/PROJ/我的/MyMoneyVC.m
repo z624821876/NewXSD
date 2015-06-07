@@ -47,20 +47,17 @@
     _headView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, 113+36)];
     [self.view addSubview:_headView];
     
-    UILabel *balanceTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(16, 22, 200, 20)];
+    UILabel *balanceTitleLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 22, 200, 20)];
     [balanceTitleLabel setFont:[UIFont systemFontOfSize:16]];
     [balanceTitleLabel setTextColor:[UIColor colorWithWhite:0.3 alpha:1]];
     [_headView addSubview:balanceTitleLabel];
     [balanceTitleLabel setText:@"账户余额"];
     
-    _balanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(balanceTitleLabel.left, 50, 200, 40)];
+    _balanceLabel = [[UILabel alloc] initWithFrame:CGRectMake(balanceTitleLabel.left, 50, UI_SCREEN_WIDTH - 30, 40)];
     [_balanceLabel setFont:[UIFont boldSystemFontOfSize:35]];
     [_balanceLabel setTextColor:[UIColor redColor]];
     [_headView addSubview:_balanceLabel];
     [_balanceLabel setText:@"0.00"];
-
-    
-    //
     
     UIView *grayBgView = [[UIView alloc] initWithFrame:CGRectMake(0, 113, UI_SCREEN_WIDTH, 36)];
     [grayBgView setBackgroundColor:[UIColor colorWithWhite:0.96 alpha:1]];
