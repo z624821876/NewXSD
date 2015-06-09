@@ -109,7 +109,6 @@
         longitude = 0;
     }
     
-//    http://admin.53xsd.com/mobi/getProductDetail&productId=9
     NSString *str=[NSString stringWithFormat:@"http://admin.53xsd.com/group/list?catId=0&latitude=%@&longitude=%@&pageNo=%d&pageSize=10&cityId=%@&isRec=1",latitude,longitude,_currentPage,[LLSession sharedSession].area.id];
     
     NSURL *url = [NSURL URLWithString:[str stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
@@ -140,6 +139,7 @@
                         shop.groupDistance = nilOrJSONObjectForKey(dict, @"distance");
                         shop.soldCount = nilOrJSONObjectForKey(dict, @"soldCount");
                         shop.productName = nilOrJSONObjectForKey(dict, @"productName");
+                        shop.catId = [Util getValuesFor:dic key:@"catId"];
                         //店铺介绍
                         [_dataArr addObject:shop];
                     }
@@ -156,13 +156,9 @@
         [self.tableView tableViewDidFinishedLoading];
 
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id data) {
-        
-        NSLog(@"发生错误！%@",error);
-        _currentPage -= 1;
-
-        [self.tableView tableViewDidFinishedLoading];
-        
-
+            NSLog(@"发生错误！%@",error);
+            _currentPage -= 1;
+            [self.tableView tableViewDidFinishedLoading];
     }];
     [operation1 start];
 }
@@ -310,6 +306,7 @@
     vc.discountPrice = shop.discountPrice;
     vc.price = shop.price;
     vc.typeIn = 10;
+    vc.shopCatId = shop.catId;
     vc.name = shop.productName;
     vc.navTitle = @"商品详情";
     vc.hidesBottomBarWhenPushed = YES;

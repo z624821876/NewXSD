@@ -13,6 +13,7 @@
 #import "XFProductCell.h"
 #import "ChoiceaAddressVC.h"
 #import "PayTypeNew.h"
+#import "IQKeyboardManager.h"
 
 @interface WaimaiOrder ()
 {
@@ -40,7 +41,7 @@
 @implementation WaimaiOrder
 - (void)viewDidLoad {
     [super viewDidLoad];
-        
+    [IQKeyboardManager sharedManager].enable = YES;
     _myProductsArray = [[NSMutableArray alloc] init];
     _addressAdrray = [[NSMutableArray alloc]initWithCapacity:5];
     
@@ -281,7 +282,7 @@
     UIButton *backBtn = [UIButton buttonWithType:UIButtonTypeCustom];
     [backBtn setFrame:CGRectMake(putInButton.left - 75, 15, 65, 30)];
     [backBtn setBackgroundImage:[UIImage imageNamed:@"btn_confirm"] forState:UIControlStateNormal];
-    [backBtn setTitle:@"继续点餐" forState:UIControlStateNormal];
+    [backBtn setTitle:@"继续点单" forState:UIControlStateNormal];
     backBtn.titleLabel.font = [UIFont systemFontOfSize:16];
     [backBtn.titleLabel setTextAlignment:NSTextAlignmentCenter];
     [backBtn addTarget:self action:@selector(back) forControlEvents:UIControlEventTouchUpInside];
@@ -608,20 +609,21 @@
 //键盘弹出时改变视图的frame
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-    [_bgScroll setContentOffset:CGPointMake(0, _bgView.bottom - 30)];
+//    [_bgScroll setContentOffset:CGPointMake(0, _bgView.bottom - 30)];
     return YES;
 }
 //回复原始位置的方法
 - (void)resumeView
 {
-    [_bgScroll setContentOffset:CGPointMake(0, 200)];
+//    [_bgScroll setContentOffset:CGPointMake(0, 200)];
     
 }
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
+    
     [textField resignFirstResponder];
     self.memo = textField.text;
-    [self resumeView];
+//    [self resumeView];
     return YES;
 }
 

@@ -10,6 +10,7 @@
 #import "DateUtil.h"
 #import "AFNetworking.h"
 #import "AppDelegate.h"
+#import "IQKeyboardManager.h"
 
 @interface OrderVC ()
 @property (nonatomic, strong) UIScrollView      *bgScroll;
@@ -25,17 +26,17 @@
 @property (nonatomic, strong) UITextField       *textField;
 @property (nonatomic, strong) UITextView        *textView;
 
+@property (nonatomic, strong) UITextField       *mobileTF;
+
 @end
 
 @implementation OrderVC
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    [IQKeyboardManager sharedManager].enable = YES;
 //    self.view.backgroundColor = [UIColor colorWithRed:236.0 / 255.0 green:236.0 / 255.0 blue:236.0 / 255.0 alpha:1];
-    
     _titleArr = @[@"10:00 - 10:30",@"10:30 - 11:00",@"11:00 - 11:30",@"11:30 - 12:00",@"12:00 - 12:30",@"12:30 - 13:00",@"13:00 - 13:30",@"13:30 - 14:00",@"14:00 - 14:30",@"14:30 - 15:00",@"15:00 - 15:30",@"15:30 - 16:00",@"16:00 - 16:30",@"16:30 - 17:00",@"17:00 - 17:30",@"17:30 - 18:00",@"18:00 - 18:30",@"18:30 - 19:00",@"19:00 - 19:30",@"19:30 - 20:00",@"20:00 - 20:30",@"20:30 - 21:00",@"21:00 - 21:30",@"21:30 - 22:00"];
-    
-    
     
     _bgScroll = [[UIScrollView alloc] initWithFrame:self.view.bounds];
     _bgScroll.backgroundColor = [UIColor colorWithRed:236.0 / 255.0 green:236.0 / 255.0 blue:236.0 / 255.0 alpha:1];
@@ -54,7 +55,19 @@
 
 - (void)initRemark
 {
-    UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 325, 320, 150)];
+    UIView *mobileInputView = [[UIView alloc] initWithFrame:CGRectMake(0, 325, 320, 50)];
+    mobileInputView.backgroundColor = [UIColor whiteColor];
+    [_bgScroll addSubview:mobileInputView];
+    
+    UILabel *mobileLabel = [[UILabel alloc] initWithFrame:CGRectMake(15, 10, 100, 30)];
+    mobileLabel.text = @"预留手机号:";
+    [mobileInputView addSubview:mobileLabel];
+    
+    _mobileTF = [[UITextField alloc] initWithFrame:CGRectMake(mobileLabel.right + 10, mobileLabel.top, UI_SCREEN_WIDTH - mobileLabel.right - 20, 30)];
+    _mobileTF.borderStyle = UITextBorderStyleRoundedRect;
+    [mobileInputView addSubview:_mobileTF];
+    
+    UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 325 + 60, 320, 150)];
     bgView.backgroundColor = [UIColor whiteColor];
     [_bgScroll addSubview:bgView];
     
@@ -65,6 +78,7 @@
     
     _textView = [[UITextView alloc] initWithFrame:CGRectMake(15, 40, 290, 100)];
     _textView.delegate = self;
+    _textView.font = [UIFont systemFontOfSize:17];
     [bgView addSubview:_textView];
     _bgScroll.contentSize = CGSizeMake(320, CGRectGetMaxY(bgView.frame) + 100);
     
@@ -83,7 +97,7 @@
 - (BOOL)textViewShouldBeginEditing:(UITextView *)textView
 {
  
-    _bgScroll.contentOffset = CGPointMake(0, 300);
+//    _bgScroll.contentOffset = CGPointMake(0, 300);
     return YES;
 }
 
@@ -98,10 +112,21 @@
         
         if (_textField.text.length <= 0) {
             
-            UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"请输入人数" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
-            [alert show];
-        }else {
-            
+            [[tools shared] HUDShowHideText:@"请输入用餐人数" delay:0.5];
+            return;
+        }
+        
+        if (_mobileTF.text.length <= 0) {
+        
+            [[tools shared] HUDShowHideText:@"请输入手机号" delay:0.5];
+            return;
+        }
+        
+        if (![Util viableMobileWith:_mobileTF.text]) {
+            [[tools shared] HUDShowHideText:@"请输入正确的手机号" delay:0.5];
+            return;
+        }
+
             NSString *date1 = [_yearArr objectAtIndex:_selectBtn.tag];
             NSInteger index = [_datePicker selectedRowInComponent:0];
             NSString *str = [[[_titleArr objectAtIndex:index] componentsSeparatedByString:@" "] firstObject];
@@ -118,30 +143,32 @@
             NSString *perNum = _textField.text;
             NSString *mark = _textView.text;
             
-            NSString *urlStr = [NSString stringWithFormat:@"http://admin.53xsd.com/reservation/apply?shopId=%@&memberId=%@&time=%.0f&number=%@&memo=%@",_shopId,[LLSession sharedSession].user.userId,date3,perNum,mark];
+            NSString *urlStr = [NSString stringWithFormat:@"http://admin.53xsd.com/reservation/apply?shopId=%@&memberId=%@&time=%.0f&number=%@&memo=%@&mobile=%@",_shopId,[LLSession sharedSession].user.userId,date3,perNum,mark,_mobileTF.text];
             NSURL *url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
             NSURLRequest *request = [NSURLRequest requestWithURL:url];
+            [[tools shared] HUDShowText:@"请稍候..."];
             //    从URL获取json数据
             AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
-                
+                [[tools shared] HUDHide];
                 if ([[JSON objectForKey:@"message"] isEqualToString:@"sucess!"]) {
                     _textView.text = @"";
                     _textField.text = @"";
                     
                     UIAlertView *alert = [[UIAlertView alloc] initWithTitle:@"温馨提示" message:@"预订成功" delegate:nil cancelButtonTitle:@"确定" otherButtonTitles:nil, nil];
                     [alert show];
-                    
+                }else {
+                    [[tools shared] HUDShowHideText:[JSON objectForKey:@"message"] delay:1.0];
                 }
+                
             } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
                 
-                [[tools shared] HUDShowHideText:@"预定失败" delay:1];
+                [[tools shared] HUDShowHideText:@"预定失败" delay:0.3];
 
             }];
 
             [operation start];
 
         }
-}
 }
 
 - (void)initDateOption
@@ -181,7 +208,7 @@
 {
     if ([text isEqualToString:@"\n"]) {
         [textView resignFirstResponder];
-        _bgScroll.contentOffset = CGPointMake(0, 100);
+//        _bgScroll.contentOffset = CGPointMake(0, 100);
         return NO;
     }
     return YES;
@@ -189,7 +216,7 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-    _bgScroll.contentOffset = CGPointMake(0, 180);
+//    _bgScroll.contentOffset = CGPointMake(0, 180);
     return YES;
 
 }
@@ -289,7 +316,6 @@
     NSCalendar *calendar = [NSCalendar currentCalendar];
     NSDateComponents *comp = [calendar components:NSYearCalendarUnit|NSMonthCalendarUnit|NSDayCalendarUnit|NSWeekdayCalendarUnit|NSDayCalendarUnit
                                          fromDate:now];
-    
     // 得到星期几
     // 1(星期天) 2(星期二) 3(星期三) 4(星期四) 5(星期五) 6(星期六) 7(星期天)
     NSInteger weekDay = [comp weekday];

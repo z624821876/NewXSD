@@ -94,8 +94,11 @@
 {
     NSInteger index = _currentBtnTag;
     if (_currentBtnTag == 0) {
-        
         index = 4;
+    }
+    
+    if (_currentBtnTag == 4) {
+        index = 5;
     }
     
     NSString *str = [NSString stringWithFormat:@"http://admin.53xsd.com/mobi/order/list?memberId=%@&pageNo=%d&pageSize=10&type=%d",[LLSession sharedSession].user.userId,_currentPage,index];
@@ -126,7 +129,7 @@
                     order.shopId = [dic objectForKey:@"id"];
                     order.type = [dic objectForKey:@"status"];
                     order.name = [dic objectForKey:@"name"];
-                    order.totalPrice = [[dic objectForKey:@"totalFee"] stringValue];
+                    order.totalPrice = [Util getValuesFor:dic key:@"totalFee"];
                     [_orderArray addObject:order];
                     
                     NSMutableArray *array = [[NSMutableArray alloc] init];
@@ -137,8 +140,8 @@
                                 Info *shop = [[Info alloc] init];
                                 shop.name = [shopDic objectForKey:@"productName"];
                                 shop.logo = [shopDic objectForKey:@"productImg"];
-                                shop.num = [[shopDic objectForKey:@"num"] stringValue];
-                                shop.totalPrice = [[shopDic objectForKey:@"fee"] stringValue];
+                                shop.num = [Util getValuesFor:shopDic key:@"num"];
+                                shop.totalPrice = [Util getValuesFor:shopDic key:@"fee"];
                                 [array addObject:shop];
                             }
                         }
@@ -180,12 +183,12 @@
 
 - (void)initTopView
 {
-    NSArray *array = @[@"全部",@"待付款",@"待发货",@"待收货"];
+    NSArray *array = @[@"全部",@"待付款",@"待发货",@"待收货",@"已完成"];
     UIView *topView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 40)];
     topView.backgroundColor = [UIColor whiteColor];
 
-    CGFloat width = (self.view.frame.size.width - 25) / 4.0;
-    for (NSInteger i = 0; i < 4; i ++) {
+    CGFloat width = (self.view.frame.size.width - 30) / 5.0;
+    for (NSInteger i = 0; i < 5; i ++) {
         UIButton *topBtn = [UIButton buttonWithType:UIButtonTypeCustom];
         topBtn.frame = CGRectMake(5 + (width + 5) * i, 0, width, 40);
         topBtn.tag = i;
@@ -197,12 +200,12 @@
     [self.view addSubview:topView];
     
     
-    _lineView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, width, 3)];
+    _lineView = [[UIView alloc] initWithFrame:CGRectMake(5, 37, width, 3)];
     _lineView.backgroundColor = [UIColor redColor];
     [topView addSubview:_lineView];
     
     _currentBtnTag = 0;
-    [self changeLineView];
+//    [self changeLineView];
 }
 
 - (void)btnClick:(UIButton *)btn
@@ -214,7 +217,8 @@
 
 - (void)changeLineView
 {
-    CGFloat width = (self.view.frame.size.width - 25) / 4.0;
+//    CGRect rect = _lineView.frame;
+    CGFloat width = (self.view.frame.size.width - 30) / 5.0;
     _lineView.frame = CGRectMake(5 + (width + 5) * _currentBtnTag, 37, width, 3);
 }
 

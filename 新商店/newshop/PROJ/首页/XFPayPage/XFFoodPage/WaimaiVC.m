@@ -567,14 +567,13 @@ static NSInteger __currentPage;
         UILabel *label2 = (UILabel *)[cell.contentView viewWithTag:102];
         UILabel *priceLable = (UILabel *)[cell.contentView viewWithTag:11111];
         
-        
         Info *shop = [_foodArray objectAtIndex:indexPath.row];
         [imgView setImageWithURL: [NSURL URLWithString:shop.detailImage] placeholderImage:nil];
         [label1 setText:shop.name];
         [label2 setText:shop.discountPrice];
-        [label2 setText:[NSString stringWithFormat:@"%@￥",shop.discountPrice]];
+        [label2 setText:[NSString stringWithFormat:@"%.2f￥",[shop.discountPrice doubleValue]]];
         
-        NSAttributedString *priceString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%@￥",shop.price] attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleSingle)}];
+        NSAttributedString *priceString = [[NSAttributedString alloc] initWithString:[NSString stringWithFormat:@"%.2f￥",[shop.price doubleValue]] attributes:@{NSStrikethroughStyleAttributeName:@(NSUnderlineStyleSingle)}];
         priceLable.attributedText = priceString;
         
         

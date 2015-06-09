@@ -15,11 +15,12 @@
 @property (nonatomic,assign) NSInteger typeIn;
 @property (nonatomic,assign) NSString *typeIndex;
 
-@property(nonatomic,strong) NSString *shopId;
-@property(nonatomic,strong) NSString *shopName;
+@property (nonatomic, strong) NSString *shopCatId;
+@property (nonatomic,strong) NSString *shopId;
+@property (nonatomic,strong) NSString *shopName;
 @property (nonatomic, assign) NSInteger stock;
-@property(nonatomic,strong) NSString *productId;
-@property(nonatomic,strong) NSString *name;
+@property (nonatomic,strong) NSString *productId;
+@property (nonatomic,strong) NSString *name;
 @property(nonatomic,strong) NSString *detailImage;
 @property(nonatomic,strong) NSString *price;
 @property(nonatomic,strong) NSString *discountPrice;

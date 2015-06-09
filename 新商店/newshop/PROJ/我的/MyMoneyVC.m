@@ -86,12 +86,13 @@
     [[RestClient sharedClient] postPath:[tools getServiceUrl:jsonBalance] parameters:params success:^(AFHTTPRequestOperation *operation, id JSON) {
         NSInteger code = [[JSON valueForKeyPath:@"code"] integerValue];
         if (code == 0){
-            CGFloat balance = [[[JSON valueForKey:@"result"] valueForKey:@"balance"] floatValue];
+            NSDictionary *dic = [JSON objectForKey:@"result"];
+            NSString *balance = [Util getValuesFor:dic key:@"balance"];
 //            NSNumberFormatter *formatter = [[NSNumberFormatter alloc] init];
 //            formatter.numberStyle = kCFNumberFormatterCurrencyStyle;
 //            NSString *balanceStr = [formatter stringFromNumber:[NSNumber numberWithInt:balance]];
 //            balanceStr = [balanceStr substringFromIndex:1];
-            [_balanceLabel setText:[NSString stringWithFormat:@"%.2f",balance]];
+            [_balanceLabel setText:[NSString stringWithFormat:@"%.2f",[balance doubleValue]]];
         }else{
             [[tools shared] HUDShowHideText:@"读取数据失败" delay:1];
         }

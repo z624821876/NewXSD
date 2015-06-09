@@ -120,6 +120,7 @@
 #pragma mark - 私有方法
 - (void)observeValueForKeyPath:(NSString *)keyPath ofObject:(id)object change:(NSDictionary *)change context:(void *)context
 {
+    
     // 遇到这些情况就直接返回
     if (!self.userInteractionEnabled || self.alpha <= 0.01 || self.hidden) return;
     

@@ -10,6 +10,8 @@
 
 @interface Util : NSObject
 
++ (BOOL)viableMobileWith:(NSString *)mobileNum;
+
 //字符串转颜色
 + (UIColor *) colorWithHexString: (NSString *) stringToConvert;
 

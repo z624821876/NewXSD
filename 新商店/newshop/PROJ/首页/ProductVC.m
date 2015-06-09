@@ -14,6 +14,9 @@
 #import "AddInCarView.h"
 #import "XFConfimBooksVC.h"
 #import "XFShopingCarVC.h"
+#import "ShopVC.h"
+#import "FoodShopVC.h"
+#import "FruitVC.h"
 @interface ProductVC ()
 {
     UIScrollView *_scrollView;
@@ -461,8 +464,46 @@
 //进入店铺
 -(void)enterShop:(id)sender
 {
-    NSLog(@"enterShop");
-    [self LeftAction:nil];
+    switch ([self.shopCatId integerValue]) {
+        case 5:
+        {
+            FoodShopVC *vc = [[FoodShopVC alloc] init];
+            vc.shopId = self.shopId;
+            //                vc.name = info;
+            vc.image = self.detailImage;
+            vc.hidesBottomBarWhenPushed = YES;
+            //                vc.navTitle = user.shopName;
+            vc.cateId = self.shopCatId;
+            [self.navigationController pushViewController:vc animated:YES];
+            
+        }
+            break;
+        case 11:
+        case 12:
+        {
+            FruitVC *vc = [[FruitVC alloc] init];
+            vc.shopId = self.shopId;
+            //                vc.name = info;
+            vc.hidesBottomBarWhenPushed = YES;
+            //                vc.navTitle = user.shopName;
+            vc.cateId = self.shopCatId;
+            [self.navigationController pushViewController:vc animated:YES];
+        }
+            break;
+        default:
+        {
+            ShopVC *vc = [[ShopVC alloc] init];
+            vc.shopId = self.shopId;
+            //                vc.name = info;
+            vc.image = self.detailImage;
+            vc.hidesBottomBarWhenPushed = YES;
+            //                vc.navTitle = user.shopName;
+            vc.cateId = self.shopCatId;
+            [self.navigationController pushViewController:vc animated:YES];
+            
+        }
+            break;
+    }
 }
 
 //加入购物车

@@ -8,6 +8,7 @@
 
 #import "ConfirmOrderVC.h"
 #import "AFJSONRequestOperation.h"
+#import "IQKeyboardManager.h"
 
 @interface ConfirmOrderVC ()
 {
@@ -24,6 +25,8 @@
 
 - (void)viewWillAppear:(BOOL)animated
 {
+    [super viewWillAppear:YES];
+    [IQKeyboardManager sharedManager].enable = YES;
     self.navigationItem.hidesBackButton = YES;
     self.navigationItem.title = @"点餐确认";
     self.navigationController.navigationBar.titleTextAttributes = [NSDictionary dictionaryWithObject:[UIColor whiteColor] forKey:NSForegroundColorAttributeName];
@@ -116,9 +119,9 @@
 
 - (BOOL)textFieldShouldReturn:(UITextField *)textField
 {
-    CGRect rect = self.view.frame;
-    rect.origin.y += 216;
-    self.view.frame = rect;
+//    CGRect rect = self.view.frame;
+//    rect.origin.y += 216;
+//    self.view.frame = rect;
 
     [self.view endEditing:YES];
     return YES;
@@ -126,15 +129,19 @@
 
 - (BOOL)textFieldShouldBeginEditing:(UITextField *)textField
 {
-    CGRect rect = self.view.frame;
-    rect.origin.y -= 216;
-    self.view.frame = rect;
+//    CGRect rect = self.view.frame;
+//    rect.origin.y -= 216;
+//    self.view.frame = rect;
     return YES;
 }
 
 - (void)confirm
 {
-
+    if (tableNo.text.length <= 0) {
+        [[tools shared] HUDShowHideText:@"请输入桌号" delay:0.5];
+        return;
+    }
+    
     NSMutableArray *array = [NSMutableArray array];
     for (Info *food in self.orderArr) {
         NSString *str = [NSString stringWithFormat:@"%@:%d",food.id,food.foodNum];
@@ -231,8 +238,6 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
-
-    
     self.view.backgroundColor = [UIColor whiteColor];
 
 }

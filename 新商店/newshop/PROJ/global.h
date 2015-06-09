@@ -67,7 +67,7 @@ static NSString * const sAppName = @"XSD";
 #define infoTypeNone    @"0" //HtmlDetailVC不显示toolbar
 #define infoTypeInfo    @"1"
 #define infoTypeActivity @"2"
-#define infoTypeProduct @"3"
+#define infoTypeProduct @"3
 #define infoTypeVote    @"4"
 
 
@@ -173,6 +173,6 @@ typedef enum{   //4种状态, 可用于各种情况，比如异步变同步时�
     FlagFailure,
 }WaitFlag;
 
-#define HUDShowErrorServerOrNetwork [[tools shared] HUDShowHideText:@"服务器或网络异常" delay:2];
+#define HUDShowErrorServerOrNetwork [[tools shared] HUDShowHideText:@"你的网络异常,请稍后再试" delay:2];
 
 #endif

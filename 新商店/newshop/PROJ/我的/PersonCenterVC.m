@@ -138,7 +138,6 @@
 //    _tableView.dataSource = self;
 //    [_scrollView addSubview:_tableView];
 //    [_tableView reloadData];
-    
 }
 
 -(void)buildLogoutView
@@ -277,7 +276,13 @@
             break;
         case 12:
         {
-            
+            //我的订单
+            [self pushWithBlock:^{
+                GroupVC *vc = [[GroupVC alloc] init];
+                vc.hidesBottomBarWhenPushed = YES;
+                [self.navigationController pushViewController:vc animated:YES];
+            }];
+
         }
             break;
 

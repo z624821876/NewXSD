@@ -239,17 +239,29 @@
 - (void)didButtonAction:(id)sender
 {
     UIButton *button = (UIButton *)sender;
-   
+    
+    CGFloat money;
+    if ([self.totalPrice doubleValue] > [self.myBalance doubleValue]) {
+        money = [self.myBalance doubleValue];
+    }else {
+        money = [self.totalPrice doubleValue];
+    }
+    NSNumberFormatter *nf = [[NSNumberFormatter alloc] init];
+    
+    nf.numberStyle = kCFNumberFormatterRoundFloor;
+    
+    NSString *string = [nf stringFromNumber:[NSNumber numberWithDouble:money]];
+
     if (button == _button1) {
          button.selected = !button.selected;//每次点击都改变按钮的状态
         if (button.selected) {
             _useMoneyTF.enabled = YES;
+            _useMoneyTF.text = string;
+            
             //在此实现打钩时的方法
            //[_button1 setSelected:NO];
             NSLog(@"选中button1-");
             //self.color = _buyView.color1.titleLabel.text;
-            
-            
         }else{
             //在此实现不打钩时的方法
             _useMoneyTF.enabled = NO;

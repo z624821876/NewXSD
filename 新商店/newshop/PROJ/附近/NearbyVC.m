@@ -41,6 +41,9 @@
     self.tableView.delegate = self;
     self.tableView.dataSource = self;
     
+    UIView *view = [UIView new];
+    self.tableView.tableFooterView = view;
+    
     //开始跟踪定位
     _locManager = [[CLLocationManager alloc] init];
     _locManager.desiredAccuracy = kCLLocationAccuracyBestForNavigation;

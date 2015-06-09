@@ -9,6 +9,7 @@
 #import "BaseVC.h"
 #import "FXLabel.h"
 #import "UIButton+Additions.h"
+#import "IQKeyboardManager.h"
 
 @interface BaseVC ()
 {
@@ -31,6 +32,7 @@
 - (void)viewDidLoad
 {
     [super viewDidLoad];
+    [IQKeyboardManager sharedManager].enable = NO;
 	// Do any additional setup after loading the view.
     
 //    self.navigationController.navigationBarHidden = YES;
@@ -130,8 +132,6 @@
 //    self.navigationItem.leftBarButtonItem = BarBtn;
     
 }
-
-
 
 //视图切换如果不是navigation方式，子类可重写该方法替代
 -(void)LeftAction:(id)sender

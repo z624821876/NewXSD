@@ -76,6 +76,7 @@ static NSInteger __currentPage;
     
     AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
         
+        BOOL isNull = YES;
         if (__currentPage == 1) {
             [_dataArray removeAllObjects];
         }
@@ -83,49 +84,38 @@ static NSInteger __currentPage;
             NSArray *array = [JSON objectForKey:@"result"];
             if ([array isKindOfClass:[NSArray class]]) {
                 for (NSDictionary *dic in array) {
+                    isNull = NO;
                     Info *info = [[Info alloc] init];
                     info.logo = [dic objectForKey:@"logo"];
                     info.createTime = [dic objectForKey:@"regTime"];
                     info.name = [dic objectForKey:@"nickname"];
                     [_dataArray addObject:info];
                 }
-                if ([array count] == 0) {
-                    
-                    __currentPage -= 1;
-                }
-            }
-            if (__currentPage == 1) {
-                
-                [_tableView.header endRefreshing];
-            }else {
-                [_tableView.footer endRefreshing];
-            }
-        }else {
-            if (__currentPage == 1) {
-                
-                [_tableView.header endRefreshing];
-            }else {
-                [_tableView.footer endRefreshing];
-                __currentPage -= 1;
+
+            
             }
         }
         
+        if ([_tableView.header isRefreshing]) {
+            [_tableView.header endRefreshing];
+        }else {
+            [_tableView.footer endRefreshing];
+        }
+        if (isNull) {
+            __currentPage -= 1;
+        }
         [_tableView reloadData];
         [[tools shared] HUDHide];
 
-        
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
-        
         [[tools shared] HUDHide];
-        if (__currentPage == 1) {
-            
+        __currentPage = 1;
+        if ([_tableView.header isRefreshing]) {
             [_tableView.header endRefreshing];
         }else {
-            __currentPage -= 1;
             [_tableView.footer endRefreshing];
         }
         HUDShowErrorServerOrNetwork
-
     }];
     [operation start];
 }
