@@ -147,8 +147,6 @@
             NSArray *resultArray = nilOrJSONObjectForKey(JSON, @"result");
             if (resultArray.count !=0) {
                 [_addressAdrray removeAllObjects];
-                
-                
                 // NSLog(@"_addressAdrray %@",_addressAdrray);
                 [_tableView reloadData];
             }else{

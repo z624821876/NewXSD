@@ -178,7 +178,7 @@
                 if (_currentPage == 1) {
                     [_dataArray removeAllObjects];
                 }
-                NSArray *tmpResultArray = [[JSON objectForKey:@"result"] objectForKey:@"result"];
+                NSArray *tmpResultArray = nilOrJSONObjectForKey(JSON, @"result");
                 for (NSDictionary *dict in tmpResultArray) {
                     isNull = NO;
                     Info *product = [[Info alloc] init];

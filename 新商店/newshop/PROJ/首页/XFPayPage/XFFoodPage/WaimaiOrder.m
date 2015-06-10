@@ -34,6 +34,7 @@
     //    Info    *currentAdd;
     UITextField   *ktextField;
     UILabel *topNameLabel;
+    BOOL        isLoadAddress;
 }
 
 @end
@@ -41,6 +42,7 @@
 @implementation WaimaiOrder
 - (void)viewDidLoad {
     [super viewDidLoad];
+    isLoadAddress = YES;
     [IQKeyboardManager sharedManager].enable = YES;
     _myProductsArray = [[NSMutableArray alloc] init];
     _addressAdrray = [[NSMutableArray alloc]initWithCapacity:5];
@@ -304,11 +306,9 @@
         [alert show];
         
     }else {
-
     
     NSString *userId = [LLSession sharedSession].user.userId;
     NSString *urlStr = [NSString stringWithFormat:@"http://admin.53xsd.com/mobi/cart/doPayNow?userId=%@&addrId=%@&memo=%@&shopId=%@",userId,_currentAdd.id,ktextField.text,self.shopId];
-    NSLog(@"-------url: %@",urlStr);
     NSURL *url = [NSURL URLWithString:[urlStr stringByAddingPercentEscapesUsingEncoding:NSUTF8StringEncoding]];
     NSURLRequest *request = [NSURLRequest requestWithURL:url];
     //        从URL获取json数据
@@ -445,10 +445,12 @@
                     _addLabel.text = shop.address;
                 }
             }else{
-                [[tools shared]HUDShowHideText:@"您还未添加地址，马上添加" delay:0.5];//跳转到添加地址界面
-                AddAddressVC *addVC = [[AddAddressVC alloc]init];
-                addVC.navTitle = @"添加地址";
-                [self.navigationController pushViewController:addVC animated:YES];
+                if (isLoadAddress) {
+                    [[tools shared]HUDShowHideText:@"您还未添加地址，马上添加" delay:0.5];//跳转到添加地址界面
+                    AddAddressVC *addVC = [[AddAddressVC alloc]init];
+                    addVC.navTitle = @"添加地址";
+                    [self.navigationController pushViewController:addVC animated:YES];
+                }
             }
         }else
         {

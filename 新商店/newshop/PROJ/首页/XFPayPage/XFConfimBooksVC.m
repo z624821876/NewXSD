@@ -31,6 +31,7 @@
     UIView *_bgView;
 //    Info    *currentAdd;
     UITextField   *ktextField;
+    BOOL       *isLoadAddress;
 }
 @end
 
@@ -38,6 +39,7 @@
 
 - (void)viewDidLoad {
     [super viewDidLoad];
+    isLoadAddress = YES;
     _productsArray = [[NSMutableArray alloc]initWithCapacity:5];
     _addressAdrray = [[NSMutableArray alloc]initWithCapacity:5];
     
@@ -71,14 +73,6 @@
     [_bgView addSubview:lineView];
 
     [self loadData];
-
-//    _tableView = [[UITableView alloc]initWithFrame:CGRectMake(0, 0, UI_SCREEN_WIDTH, UI_SCREEN_HEIGHT-20-44-49) style:UITableViewStylePlain];
-//    _tableView.delegate = self;
-//    _tableView.dataSource = self;
-//    [self.view addSubview:_tableView];
-//    self.view.backgroundColor = [UIColor whiteColor];
-//    _tableView.backgroundColor = [UIColor whiteColor];
-//    [self loadData];
 }
 
 - (void)viewDidAppear:(BOOL)animated
@@ -405,10 +399,13 @@
                     _addLabel.text = shop.address;
                 }
           }else{
-                [[tools shared]HUDShowHideText:@"您还未添加地址，马上添加" delay:0.5];//跳转到添加地址界面
-                AddAddressVC *addVC = [[AddAddressVC alloc]init];
-                addVC.navTitle = @"添加地址";
-                [self.navigationController pushViewController:addVC animated:YES];
+              if (isLoadAddress) {
+                  isLoadAddress = NO;
+                  [[tools shared]HUDShowHideText:@"您还未添加地址，马上添加" delay:0.5];//跳转到添加地址界面
+                  AddAddressVC *addVC = [[AddAddressVC alloc]init];
+                  addVC.navTitle = @"添加地址";
+                  [self.navigationController pushViewController:addVC animated:YES];
+              }
             }
         }else
         {

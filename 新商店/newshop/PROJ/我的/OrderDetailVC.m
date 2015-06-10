@@ -15,6 +15,11 @@
 #import "StatusModel.h"
 #import "GroupVC.h"
 @interface OrderDetailVC ()
+{
+    NSString        *_orderShopName;
+    NSString        *_orderShopMobile;
+    NSString        *_orderShopAddress;
+}
 @property (nonatomic, strong) UIButton              *bottomBtn;
 @property (nonatomic, strong) UILabel               *bottomLabel;
 @property (nonatomic, strong) OrderStatusView       *orderStatusView;
@@ -27,7 +32,6 @@
 @end
 
 @implementation OrderDetailVC
-
 
 - (void)viewWillAppear:(BOOL)animated
 {
@@ -48,12 +52,13 @@
 
 - (void)viewDidAppear:(BOOL)animated
 {
+    
     [super viewDidAppear:YES];
     [self loadData];
 }
 
-- (void)viewDidLoad {
-    
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     _statusArray = [[NSMutableArray alloc] init];
     [self buildOptionView];
@@ -189,7 +194,6 @@
     rect.origin.x = (btn.tag - 10) * UI_SCREEN_WIDTH / 2.0;
     _markView.frame = rect;
     
-    
 }
 
 - (void)loadData
@@ -210,14 +214,21 @@
             self.postFee = [[resultDic objectForKey:@"postFee"] stringValue];;
             self.itemNum = [[resultDic objectForKey:@"itemNum"] stringValue];
             
-            self.postName = [resultDic objectForKey:@"express"];
-            self.postNo = [resultDic objectForKey:@"expressNo"];
+            self.postName = nilOrJSONObjectForKey(resultDic, @"express");
+            self.postNo = [Util getValuesFor:resultDic key:@"expressNo"];
+
+//            self.postName = @"asdasd";
+//            self.postNo = @"asdasd";
             
             NSDictionary *receiveAddress = nilOrJSONObjectForKey(resultDic, @"receiveAddress");
             //收货信息
             self.name = nilOrJSONObjectForKey(receiveAddress, @"name");
             self.phone = nilOrJSONObjectForKey(receiveAddress, @"mobile");
             self.address = nilOrJSONObjectForKey(receiveAddress, @"address");
+            
+            _orderShopName = nilOrJSONObjectForKey(resultDic, @"shopName");
+            _orderShopMobile = [Util getValuesFor:resultDic key:@"shopMobile"];
+            _orderShopAddress = nilOrJSONObjectForKey(resultDic, @"shopAddress");
             
             NSArray *itemArr = nilOrJSONObjectForKey(resultDic, @"items");
             for (NSDictionary *dic in itemArr) {
@@ -443,10 +454,15 @@
 }
 
 - (CGFloat)tableView:(UITableView *)tableView heightForFooterInSection:(NSInteger)section
-{    if ([self.postName isKindOfClass:[NSNull class]]) {
-        return 130;
+{
+    NSString *address = [NSString stringWithFormat:@"商家地址: %@",_orderShopAddress];
+    CGFloat height1 = [address boundingRectWithSize:CGSizeMake(UI_SCREEN_WIDTH - 45, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:15]} context:nil].size.height;
+
+    if ([self.postName isKindOfClass:[NSNull class]] || self.postName == nil) {
+
+        return 130 + height1 + 10;
     }
-    return 130 + 65;
+    return 130 + height1 + 10 + 40 + 20 + 10;
 }
 
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section
@@ -504,7 +520,7 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
-    UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 60)];
+    UIView *bgView = [[UIView alloc] init];
     bgView.backgroundColor = [UIColor whiteColor];
     
     NSArray *array = @[@"运费：",@"商品数：",@"实付款："];
@@ -536,52 +552,81 @@
     
     UIImageView *img = [[UIImageView alloc] initWithFrame:CGRectMake(10, 70, 20, 20)];
     img.contentMode = UIViewContentModeScaleAspectFit;
-    img.image = [UIImage imageNamed:@"ico_adr.png"];
+    img.image = [UIImage imageNamed:@"enter_shop.png"];
     [bgView addSubview:img];
     
     UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(35, 70, 80, 20)];
-    label.text = @"收货信息";
+    label.text = @"商家信息";
     [bgView addSubview:label];
     
-    UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(35, 90, 190, 20)];
-    nameLabel.font = [UIFont systemFontOfSize:12];
-    nameLabel.text = [NSString stringWithFormat:@"收货人：%@",self.name];
+    UILabel *nameLabel = [[UILabel alloc] initWithFrame:CGRectMake(35, 90, UI_SCREEN_WIDTH - 45, 20)];
+    nameLabel.font = [UIFont systemFontOfSize:15];
+    nameLabel.text = [NSString stringWithFormat:@"商家名字: %@",_orderShopName];
     [bgView addSubview:nameLabel];
     
-    UILabel *phoneLabel = [[UILabel alloc] initWithFrame:CGRectMake(320 - 85, 90, 75, 20)];
-    phoneLabel.textAlignment = NSTextAlignmentRight;
-    phoneLabel.font = [UIFont systemFontOfSize:10];
-    phoneLabel.text = [NSString stringWithFormat:@"%@",self.phone];
+    UILabel *phoneLabel = [[UILabel alloc] initWithFrame:CGRectMake(35, nameLabel.bottom, nameLabel.width, 20)];
+    phoneLabel.font = [UIFont systemFontOfSize:15];
+    phoneLabel.text = [NSString stringWithFormat:@"商家电话: %@",_orderShopMobile];
     [bgView addSubview:phoneLabel];
     
-    UILabel *addLable = [[UILabel alloc] initWithFrame:CGRectMake(35, 110, 320 - 45, 20)];
-    addLable.font = [UIFont systemFontOfSize:12];
-    addLable.text = [NSString stringWithFormat:@"收货地址：%@",self.address];
+    NSString *address = [NSString stringWithFormat:@"商家地址: %@",_orderShopAddress];
+    CGFloat height1 = [address boundingRectWithSize:CGSizeMake(nameLabel.width, MAXFLOAT) options:NSStringDrawingUsesLineFragmentOrigin | NSStringDrawingUsesFontLeading attributes:@{NSFontAttributeName:[UIFont systemFontOfSize:15]} context:nil].size.height;
+    NSLog(@"%f",height1);
+    UILabel *addLable = [[UILabel alloc] initWithFrame:CGRectMake(35, phoneLabel.bottom, nameLabel.width, height1)];
+    addLable.font = [UIFont systemFontOfSize:15];
+    addLable.text = address;
     [bgView addSubview:addLable];
     
-    
     if (![self.postName isKindOfClass:[NSNull class]] && self.postName != nil) {
-        
-        UIView *lineView2 = [[UIView alloc] initWithFrame:CGRectMake(15, addLable.bottom, 290, 0.5)];
-        lineView2.backgroundColor = [UIColor colorWithWhite:0.5 alpha:1];
+    
+        UIView *lineView2 = [[UIView alloc] initWithFrame:CGRectMake(0, addLable.bottom + 4.5, UI_SCREEN_WIDTH, 0.5)];
+        lineView2.backgroundColor = [UIColor grayColor];
         [bgView addSubview:lineView2];
         
+        UIImageView *img2 = [[UIImageView alloc] initWithFrame:CGRectMake(10, lineView2.bottom + 5, 20, 20)];
+        img2.contentMode = UIViewContentModeScaleAspectFit;
+        img2.image = [UIImage imageNamed:@"XSD-ico_truck.png"];
+        [bgView addSubview:img2];
         
         UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(35, lineView2.bottom + 5, 80, 20)];
-        label2.text = @"物流信息";
+        label2.text = @"配送信息";
         [bgView addSubview:label2];
         
-        UILabel *nameLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(35, label2.bottom, 320 - 45, 20)];
-        nameLabel2.font = [UIFont systemFontOfSize:12];
-        nameLabel2.text = [NSString stringWithFormat:@"物流公司：%@",self.postName];
-        [bgView addSubview:nameLabel2];
+        UILabel *label3 = [[UILabel alloc] initWithFrame:CGRectMake(35, label2.bottom, nameLabel.width, 20)];
+        label3.font = [UIFont systemFontOfSize:15];
+        label3.text = [NSString stringWithFormat:@"配送人: %@",self.postName];
+        [bgView addSubview:label3];
         
-        UILabel *addLable2 = [[UILabel alloc] initWithFrame:CGRectMake(35, nameLabel2.bottom, 320 - 45, 20)];
-        addLable2.font = [UIFont systemFontOfSize:12];
-        addLable2.text = [NSString stringWithFormat:@"快递单号：%@",self.postNo];
-        [bgView addSubview:addLable2];
-
+        NSString *mobileStr = [NSString stringWithFormat:@"配送电话: %@",self.postNo];
+        UILabel *label4 = [[UILabel alloc] initWithFrame:CGRectMake(35, label3.bottom, label3.width, 20)];
+        label4.text = mobileStr;
+        label4.font = [UIFont systemFontOfSize:15];
+        [bgView addSubview:label4];
     }
+
+    
+//    if (![self.postName isKindOfClass:[NSNull class]] && self.postName != nil) {
+//        
+//        UIView *lineView2 = [[UIView alloc] initWithFrame:CGRectMake(15, addLable.bottom, 290, 0.5)];
+//        lineView2.backgroundColor = [UIColor colorWithWhite:0.5 alpha:1];
+//        [bgView addSubview:lineView2];
+//        
+//        
+//        UILabel *label2 = [[UILabel alloc] initWithFrame:CGRectMake(35, lineView2.bottom + 5, 80, 20)];
+//        label2.text = @"物流信息";
+//        [bgView addSubview:label2];
+//        
+//        UILabel *nameLabel2 = [[UILabel alloc] initWithFrame:CGRectMake(35, label2.bottom, 320 - 45, 20)];
+//        nameLabel2.font = [UIFont systemFontOfSize:12];
+//        nameLabel2.text = [NSString stringWithFormat:@"物流公司：%@",self.postName];
+//        [bgView addSubview:nameLabel2];
+//        
+//        UILabel *addLable2 = [[UILabel alloc] initWithFrame:CGRectMake(35, nameLabel2.bottom, 320 - 45, 20)];
+//        addLable2.font = [UIFont systemFontOfSize:12];
+//        addLable2.text = [NSString stringWithFormat:@"快递单号：%@",self.postNo];
+//        [bgView addSubview:addLable2];
+//
+//    }
         return bgView;
 }
 

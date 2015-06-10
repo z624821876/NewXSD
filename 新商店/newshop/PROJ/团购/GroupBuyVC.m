@@ -118,6 +118,7 @@
         if (_currentPage == 1) {
             [_dataArr removeAllObjects];
         }
+        BOOL isNull = YES;
         if ([[JSON objectForKey:@"code"] integerValue] == 0) {
             
                 NSDictionary *dic = nilOrJSONObjectForKey(JSON, @"result");
@@ -128,6 +129,7 @@
                     
                     //有数据
                     for (NSDictionary *dict in array) {
+                        isNull = NO;
                         Info *shop = [[Info alloc] init];
                         shop.id = nilOrJSONObjectForKey(dict, @"productId");
                         shop.shopId = nilOrJSONObjectForKey(dict, @"shopId");
@@ -143,20 +145,17 @@
                         //店铺介绍
                         [_dataArr addObject:shop];
                     }
-                
-            }else {
-                _currentPage -= 1;
             }
-
-            
-        }else {
+        }
+        
+        if (isNull) {
             _currentPage -= 1;
         }
+        
         [self.tableView reloadData];
         [self.tableView tableViewDidFinishedLoading];
 
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id data) {
-            NSLog(@"发生错误！%@",error);
             _currentPage -= 1;
             [self.tableView tableViewDidFinishedLoading];
     }];
@@ -177,7 +176,6 @@
         _currentPage += 1;
     [self performSelector:@selector(loadData) withObject:nil afterDelay:0];
 }
-
 
 #pragma mark - tableView  代理
 - (NSInteger)tableView:(UITableView *)tableView numberOfRowsInSection:(NSInteger)section

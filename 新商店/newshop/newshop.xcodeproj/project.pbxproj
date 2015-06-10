@@ -10,6 +10,7 @@
 		282DD2E418F51BE4002C2285 /* XCTest.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 282DD2E318F51BE4002C2285 /* XCTest.framework */; };
 		282DD2E518F51BE4002C2285 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 282DD2CA18F51BE4002C2285 /* Foundation.framework */; };
 		282DD2E618F51BE4002C2285 /* UIKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 282DD2CE18F51BE4002C2285 /* UIKit.framework */; };
+		9A6E2AC01B283100001201B2 /* XSD-ico_truck@2x.png in Resources */ = {isa = PBXBuildFile; fileRef = 9A6E2ABF1B283100001201B2 /* XSD-ico_truck@2x.png */; };
 		9A7F356A1B25377F006E5C64 /* IQKeyboardManager.bundle in Resources */ = {isa = PBXBuildFile; fileRef = 9A7F35551B25377E006E5C64 /* IQKeyboardManager.bundle */; };
 		9A7F356B1B25377F006E5C64 /* IQKeyboardManager.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A7F35571B25377F006E5C64 /* IQKeyboardManager.m */; };
 		9A7F356C1B25377F006E5C64 /* IQNSArray+Sort.m in Sources */ = {isa = PBXBuildFile; fileRef = 9A7F355B1B25377F006E5C64 /* IQNSArray+Sort.m */; };
@@ -554,6 +555,7 @@
 		282DFB9F18F53336001E2A38 /* AudioToolbox.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = AudioToolbox.framework; path = System/Library/Frameworks/AudioToolbox.framework; sourceTree = SDKROOT; };
 		282DFBA118F53342001E2A38 /* libsqlite3.0.dylib */ = {isa = PBXFileReference; lastKnownFileType = "compiled.mach-o.dylib"; name = libsqlite3.0.dylib; path = usr/lib/libsqlite3.0.dylib; sourceTree = SDKROOT; };
 		282DFBA318F5334A001E2A38 /* MobileCoreServices.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = MobileCoreServices.framework; path = System/Library/Frameworks/MobileCoreServices.framework; sourceTree = SDKROOT; };
+		9A6E2ABF1B283100001201B2 /* XSD-ico_truck@2x.png */ = {isa = PBXFileReference; lastKnownFileType = image.png; path = "XSD-ico_truck@2x.png"; sourceTree = "<group>"; };
 		9A7F35551B25377E006E5C64 /* IQKeyboardManager.bundle */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.plug-in"; path = IQKeyboardManager.bundle; sourceTree = "<group>"; };
 		9A7F35561B25377F006E5C64 /* IQKeyboardManager.h */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.h; path = IQKeyboardManager.h; sourceTree = "<group>"; };
 		9A7F35571B25377F006E5C64 /* IQKeyboardManager.m */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.c.objc; path = IQKeyboardManager.m; sourceTree = "<group>"; };
@@ -2690,6 +2692,7 @@
 		C8F85AAA1A5182DF0021CF1B /* images */ = {
 			isa = PBXGroup;
 			children = (
+				9A6E2ABF1B283100001201B2 /* XSD-ico_truck@2x.png */,
 				B58D2B6A1B1D6428008B2BC6 /* fruit-05.png */,
 				B58D2B6B1B1D6428008B2BC6 /* fruit-06.png */,
 				B50A02801B1C3E9600BA91D5 /* fruit-01.png */,
@@ -3180,6 +3183,7 @@
 				C8542C061A13A838008D9B55 /* tb_3.png in Resources */,
 				B5AC97C91AD906DC003AE6F6 /* 个人中心_05.png in Resources */,
 				C8542B201A13A838008D9B55 /* segment_middle_item@2x.png in Resources */,
+				9A6E2AC01B283100001201B2 /* XSD-ico_truck@2x.png in Resources */,
 				C82D011C1A5AB6F6004CD8DF /* cate_all@2x.png in Resources */,
 				C8542B1E1A13A838008D9B55 /* segment_middle_item.png in Resources */,
 				A8636A7F1A70A8D600C542D2 /* btn_checkorder.png in Resources */,

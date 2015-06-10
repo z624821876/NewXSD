@@ -191,6 +191,7 @@
 //    [self.navigationController pushViewController:addVC animated:YES];
     
 }
+
 -(void)buildDetailSelectView
 {
     float top = [self buildSeparateLine:_infoBgView.bottom];
@@ -461,6 +462,7 @@
     
     
 }
+
 //进入店铺
 -(void)enterShop:(id)sender
 {
@@ -618,6 +620,11 @@
 //提交加入购物车
 - (void)didClickedCarConfimButtonAction:(id)sender
 {
+    if ([self.buyNum integerValue] > self.stock) {
+        [[tools shared] HUDShowHideText:@"库存不足" delay:1.0];
+        return;
+    }
+
     if ([_colorArr count] == 0 || currentColor.length > 0) {
 
     NSString *userId = [LLSession sharedSession].user.userId;
@@ -727,7 +734,10 @@
 //立即购买
 - (void)didClickedBuyConfimButtonAction:(id)sender
 {
-    
+    if ([self.buyNum integerValue] > self.stock) {
+        [[tools shared] HUDShowHideText:@"库存不足" delay:1.0];
+        return;
+    }
     if ([_colorArr count] == 0 || currentColor.length > 0) {
         XFConfimBooksVC *confimVC = [[XFConfimBooksVC alloc]init];
         confimVC.navTitle = @"确认订单";
@@ -775,6 +785,7 @@
 {
     //移除观察者
 }
+
 -(void)drawLine:(CGRect)rect inView:(UIView *)view
 {
     UIView *line = [[UIView alloc] initWithFrame:rect];
@@ -782,7 +793,8 @@
     [view addSubview:line];
 }
 
-- (void)didReceiveMemoryWarning {
+- (void)didReceiveMemoryWarning
+{
     [super didReceiveMemoryWarning];
     // Dispose of any resources that can be recreated.
 }

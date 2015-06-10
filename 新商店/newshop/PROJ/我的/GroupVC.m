@@ -25,8 +25,6 @@
 @property (nonatomic, strong) NSMutableArray        *orderArray;
 @property (nonatomic, assign) NSInteger             currentPage;
 
-
-
 @end
 
 @implementation GroupVC
@@ -48,7 +46,8 @@
     [self.navigationController popViewControllerAnimated:YES];
 }
 
-- (void)viewDidLoad {
+- (void)viewDidLoad
+{
     [super viewDidLoad];
     _isPush = YES;
     _currentPage = 1;
@@ -160,12 +159,17 @@
         }
         [_tableView reloadData];
         
-        Info *info = [_orderArray objectAtIndex:0];
-
-        if ([info.type integerValue] != 3) {
-            if (_isPush) {
-                NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
-                [self tableView:_tableView didSelectRowAtIndexPath:index];
+        if (_currentBtnTag == 0) {
+            
+            if ([_orderArray count] > 0) {
+                Info *info = [_orderArray firstObject];
+                
+                if ([info.type integerValue] != 3) {
+                    if (_isPush) {
+                        NSIndexPath *index = [NSIndexPath indexPathForRow:0 inSection:0];
+                        [self tableView:_tableView didSelectRowAtIndexPath:index];
+                    }
+                }
             }
         }
     } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
@@ -265,18 +269,30 @@
 
 - (UIView *)tableView:(UITableView *)tableView viewForFooterInSection:(NSInteger)section
 {
+    
     UIView *bgView = [[UIView alloc] initWithFrame:CGRectMake(0, 0, 320, 60)];
     bgView.backgroundColor = [UIColor whiteColor];
-    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(35, 10, 200, 40)];
+    UILabel *label = [[UILabel alloc] initWithFrame:CGRectMake(10, 10, 150, 40)];
     label.font = [UIFont systemFontOfSize:14];
     Info *info = [_orderArray objectAtIndex:section];
     label.text = info.createTime;
     [bgView addSubview:label];
-    
+
+    UIButton *deleteBtn = [UIButton buttonWithType:UIButtonTypeCustom];
+    deleteBtn.tag = section;
+    deleteBtn.frame = CGRectMake(320 - 160, 15, 50, 30);
+    deleteBtn.backgroundColor = [UIColor redColor];
+    [deleteBtn setTitle:@"删除" forState:UIControlStateNormal];
+    [deleteBtn setTitleColor:[UIColor whiteColor] forState:UIControlStateNormal];
+    [deleteBtn addTarget:self action:@selector(deleteOrder:) forControlEvents:UIControlEventTouchUpInside];
+    deleteBtn.hidden = YES;
+    [bgView addSubview:deleteBtn];
+
     UILabel *statusLabel = [[UILabel alloc] initWithFrame:CGRectMake(320 - 100, 10, 80, 40)];
     statusLabel.textAlignment = NSTextAlignmentCenter;
+    statusLabel.font = [UIFont systemFontOfSize:13];
     [bgView addSubview:statusLabel];
-    
+
     UIButton *btn = [UIButton buttonWithType:UIButtonTypeCustom];
     btn.frame = CGRectMake(320 - 100, 15, 80, 30);
     btn.tag = section;
@@ -293,7 +309,8 @@
         {
             //等待付款
             btn.hidden = NO;
-            [btn setTitle:@"去付款" forState:UIControlStateNormal];
+            deleteBtn.hidden = NO;
+            [btn setTitle:@"付款" forState:UIControlStateNormal];
         }
             break;
         case 1:
@@ -313,13 +330,14 @@
         {
             //交易成功
             statusLabel.text = @"已完成";
+            deleteBtn.hidden = NO;
         }
             break;
         case 4:
         {
             //交易关闭
-            statusLabel.text = @"交易关闭";
-
+            statusLabel.text = @"线下付款订单";
+            statusLabel.backgroundColor = [UIColor grayColor];
         }
             break;
         case 5:
@@ -360,6 +378,28 @@
 }
 
 #pragma mark - push
+- (void)deleteOrder:(UIButton *)btn
+{
+    Info *info = [_orderArray objectAtIndex:btn.tag];
+
+    NSString *str = [NSString stringWithFormat:@"http://admin.53xsd.com/mobi/order/deleteOrder?orderId=%@&memberId=%@",info.shopId,[LLSession sharedSession].user.userId];
+    NSURL *url = [NSURL URLWithString:str];
+    NSURLRequest *request = [NSURLRequest requestWithURL:url];
+    [[tools shared] HUDShowText:@"请稍候"];
+    AFJSONRequestOperation *operation = [AFJSONRequestOperation JSONRequestOperationWithRequest:request success:^(NSURLRequest *request, NSHTTPURLResponse *response, id JSON) {
+        if ([[JSON objectForKey:@"code"] integerValue] == 0) {
+            [[tools shared] HUDShowHideText:@"操作成功" delay:1.0];
+            _currentPage = 1;
+            [self loadData];
+        }else {
+            [[tools shared] HUDShowHideText:[JSON objectForKey:@"message"] delay:1.0];
+        }
+    } failure:^(NSURLRequest *request, NSHTTPURLResponse *response, NSError *error, id JSON) {
+        HUDShowErrorServerOrNetwork
+    }];
+    [operation start];
+}
+
 - (void)doPay:(UIButton *)btn
 {
     if (![btn.currentTitle isEqualToString:@"确认收货"]) {
@@ -456,8 +496,11 @@
 - (void)tableView:(UITableView *)tableView didSelectRowAtIndexPath:(NSIndexPath *)indexPath
 {
     [tableView deselectRowAtIndexPath:indexPath animated:YES];
-    Info *order = [_orderArray objectAtIndex:indexPath.section];
     
+    Info *order = [_orderArray objectAtIndex:indexPath.section];
+    if ([order.type integerValue] == 4) {
+        return;
+    }
     //进入订单详情页
     OrderDetailVC *detail = [[OrderDetailVC alloc] init];
     detail.totlalPrice = order.totalPrice;
